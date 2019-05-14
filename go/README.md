@@ -6,7 +6,10 @@ This is a Go implementation of MemoLock.
 
 # Launching the example
 `go run example/example.go` will launch a HTTP server (default addr: `127.0.0.1:8080`).
-Use `curl -get localhost:8080/...` to interact with it. The code is fairly self-explanatory.
+
+Use `curl -get localhost:8080/...` to interact with it. 
+
+The code is fairly self-explanatory.
 
 # Usage
 ```go
