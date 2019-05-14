@@ -10,7 +10,19 @@ Use `curl -get localhost:8080/...` to interact with it. The code is fairly self-
 
 # Usage
 ```go
-import "github.com/kristoff-it/redis-memolock/go/memolock"
+import (
+    "fmt"
+	"time"
+    "github.com/go-redis/redis"
+    "github.com/kristoff-it/redis-memolock/go/memolock"
+)
+
+// First, we need a redis connection pool
+r := redis.NewClient(&redis.Options{
+    Addr:     "localhost:6379", // use default Addr
+    Password: "",               // no password set
+    DB:       0,                // use default DB
+})
 
 // A memolock instance handles multiple resources of the same type,
 // all accomunated by the same tag name, which will be then used as
@@ -27,14 +39,20 @@ queryMemolock, _ := memoLock.NewRedisMemoLock(r, queryResourceTag, 5 * time.Seco
 resourceID := "user-kristoff-recommendations"
 requestTimeout := 10 * time.Second
 cachedQueryset, _ := queryMemoLock.GetResource(resourceID, requestTimeout, func () (string, time.Duration, error) {
+    
+    // Sleeping to simulate work. 
+	<- time.After(2 * time.Second)
     result := fmt.Sprintf("<query set result %s>", resourceID)
     
-    // The function will return the value, the cache time-to-live, and an error.
+    // The function will return a value, a cache time-to-live, and an error.
     // If the error is not nil, it will be returned to you by GetResource()
     return result, 5 * time.Second, nil
 })
 
-// MemoLock instances can
+fmt.Println(cachedQueryset)
+fmt.Println("Launch the script again, and see the differences.")
+
+// MemoLock instances are thread-safe.
 
 // The library also supports: 
 // - renewing the lock lease

@@ -1,4 +1,4 @@
-module github.com/kristoff_it/redis-memolock/go
+module github.com/kristoff-it/redis-memolock/go
 
 go 1.12
 
