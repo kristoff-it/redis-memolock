@@ -12,7 +12,10 @@ work.
 
 While I claim to have come up with the name, the concept is not new (as always), 
     [here](https://instagram-engineering.com/thundering-herds-promises-82191c8af57d) 
-you can read about Instagram having a similar concept in their architecture.
+you can read about Instagram having a similar concept in their architecture 
+(but I did submit 
+    [a talk to NDC on the same subject](https://ndcoslo.com/talk/solving-tricky-coordination-problems-in-stateless-net-services/) 
+before their post, so I claim it was an indepentent discovery, ha! ).
 
 What I just called a *resource* could in fact be considered any serializable input to a
 function. This is why I'm equiparating this concept with memoization.
