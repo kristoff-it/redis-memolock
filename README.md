@@ -72,9 +72,10 @@ adjustments for their own use-cases.
 
 Each implementation has its own README with code examples.
 
+## C#
+Coming in concomitance with [my talk at NDC](https://ndcoslo.com/talk/solving-tricky-coordination-problems-in-stateless-net-services/).
+
 ## Go
 Inside the `go/` directory you can find a Go module. This implementation makes good use of 
 goroutines and channels, and uses a single goroutine to write to the subscription multiplexer,
-as opposed to the C# version (not yet available, I will post it in concomitance with 
-    [my talk at NDC](https://ndcoslo.com/talk/solving-tricky-coordination-problems-in-stateless-net-services/)
-) which has concurrent writers acquire control of a C# `ConcurrentDictionary`.
+as opposed to the C# version which has concurrent writers acquire control of a `ConcurrentDictionary`.
