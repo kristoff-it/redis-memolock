@@ -33,7 +33,7 @@ func main () {
     // A memolock instance handles multiple resources of the same type,
     // all united by the same tag name, which will be then used as a key
     // prefix in Redis.
-    queryResourceTag := "query-set"
+    queryResourceTag := "recommendations"
     queryMemoLock, _ := memolock.NewRedisMemoLock(r, queryResourceTag, 5 * time.Second)
     // This instance has a 5 second default lock timeout:
     // Later in the code you can use the memolock to cache the result of a function and
@@ -41,7 +41,7 @@ func main () {
 
     // Here I'm requesting a queryset (saved in Redis as a String) and providing  
     // a function that can be used if the value needs to be generated:
-    resourceID := "user-kristoff-recommendations"
+    resourceID := "user-kristoff"
     requestTimeout := 10 * time.Second
     cachedQueryset, _ := queryMemoLock.GetResource(resourceID, requestTimeout, 
         func () (string, time.Duration, error) {
