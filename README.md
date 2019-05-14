@@ -54,10 +54,10 @@ a GenericOpenOrWriteError)*
 A **bad example** is using a MemoLock to guard a computation that might be corrupted by concurrent
 writers. If your mistake is bad enough, you might end up in a situation where both writes succeed
 and the result becomes corrupted. Don't use this lock to do distributed transactions, for example.
-*Fix: just dont.*
+*Fix: just don't.*
 
 I'm writing this warning because distributed locking is a complex subject and it's easy to misuse
-tools if you expect from them greater guarantees than they actually provide. As stated already,
+tools if you expect from them greater guarantees than they actually provide. As stated previously,
 this library tries to be lightweight to enhance performance, not guarantee full mutual exclusion.
 While not providing such functionality can be seen as a limitation, the upside is that such library
 would not not scale as much (because of a higher level of coordination) and would not allow you
