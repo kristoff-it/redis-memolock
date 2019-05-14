@@ -62,7 +62,7 @@ While not providing such functionality can be seen as a limitation, the upside i
 would not be able scale as much (because of a higher level of coordination) and would not allow you
 to use services that are not Redis-aware to store results, such as a CDN, for example.
 
-*Enjoy the simplicity that springs from limiting the scope of our design.*
+*Enjoy the simplicity and flexibility that springs from limiting the scope of our design.*
 
 # Repository Contents
 This repository will soon contain a few different implementations that are able to cooperate
