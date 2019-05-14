@@ -35,7 +35,7 @@ promises across the network. Since Redis can be replicated and clustered, you ca
 library up to any scale.
 
 # !! WARNING !!
-This library is all about nimble locking for performance reasons. It's ok to use it in combination
+This library is all about nimble locking for enhancing performance. It's ok to use it in combination
 with external systems (e.g. store the result of the computation elsewhere, like a CDN if it's a PDF
 report, and just save in Redis a token representing the location) but it's **NOT** ok to use it to 
 lock computations that rely on mutual exclusion for correctness. **This locking mechanism is about 
