@@ -31,8 +31,8 @@ func main () {
     })
 
     // A memolock instance handles multiple resources of the same type,
-    // all accomunated by the same tag name, which will be then used as
-    // a key prefix in Redis.
+    // all united by the same tag name, which will be then used as a key
+    // prefix in Redis.
     queryResourceTag := "query-set"
     queryMemoLock, _ := memolock.NewRedisMemoLock(r, queryResourceTag, 5 * time.Second)
     // This instance has a 5 second default lock timeout:
