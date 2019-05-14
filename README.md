@@ -80,8 +80,8 @@ Inside the `go/` directory you can find a Go module. This implementation makes g
 goroutines and channels, and uses a single goroutine to write to the subscription multiplexer,
 as opposed to the C# version which has concurrent writers acquire control of a `ConcurrentDictionary`.
 
-# Footnote: how can different implementations share promises?
-Here the term *promise* is used in a fairly abstract way with only a small connection to any specific language's implementation.
+# How can different implementations share promises?
+Here the term *promise* is used in a fairly abstract way with only a small connection to any specific language implementation.
 Different implementations can interoperate because they share a Redis client and the understanding of three concepts:
 
 1. Keys are stored using the scheme `<resource tag>:<resource id>` (e.g. `user-recommendations:kristoff`)
