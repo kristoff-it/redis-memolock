@@ -15,7 +15,7 @@ While I claim to have come up with the name, the concept is not new (as always),
 you can read about Instagram having a similar concept in their architecture 
 (but I did submit 
     [a talk to NDC on the same subject](https://ndcoslo.com/talk/solving-tricky-coordination-problems-in-stateless-net-services/) 
-before their post, so I claim it was an indepentent discovery, ha! ).
+before their post, so I claim it was an indepentent discovery, ha!).
 
 What I just called a *resource* could in fact be considered any serializable input to a
 function. This is why I'm equiparating this concept with memoization.
@@ -31,7 +31,8 @@ any other request that is waiting for the value to be stored in the cache.
 and really any kind of expensive-but-online computation.**
 
 The implementations in this repository use Redis to cache values and Pub/Sub to resolve
-promises across the network.
+promises across the network. Since Redis can be replicated and clustered, you can take this 
+library up to any scale.
 
 # Repository Contents
 This repository will soon contain a few different implementations that are able to cooperate
