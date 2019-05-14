@@ -84,8 +84,11 @@ as opposed to the C# version which has concurrent writers acquire control of a `
 Here the term *promise* is used in a fairly abstract way with only a small connection to any specific language implementation.
 Different implementations can interoperate because they share a Redis client and the understanding of three concepts:
 
-1. Keys are stored using the scheme `<resource tag>:<resource id>` (e.g. `user-recommendations:kristoff`)
-2. Locks are stored using the scheme`<resource tag>/lock:<resource id>` (e.g. `user-recommendations/lock:kristoff`)
-3. Pub/Sub notifications are sent over the channel `<resource tag>/notif:<resource id>` (e.g. `user-recommendations/notif:kristoff`)
+1. Keys are stored using the scheme `<resource tag>:<resource id>`
+   (e.g. `user-recommendations:kristoff`)
+2. Locks are stored using the scheme`<resource tag>/lock:<resource id>`
+   (e.g. `user-recommendations/lock:kristoff`)
+3. Pub/Sub notifications are sent over the channel `<resource tag>/notif:<resource id>`
+   (e.g. `user-recommendations/notif:kristoff`)
 
 Any client that can `SET` and `GET` a key, and that can use Pub/Sub can interoperate transparently with all others.
