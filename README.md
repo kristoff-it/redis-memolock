@@ -10,6 +10,10 @@ since the cache is shared by multiple consumers, each key has a locking mechanis
 ensures that multiple concurrent requests for the same resource don't cause unnecessary
 work.
 
+While I claim to have come up with the name, the concept is not new (as always), 
+    [here](https://instagram-engineering.com/thundering-herds-promises-82191c8af57d) 
+you can read about Instagram having a similar concept in their architecture.
+
 What I just called a *resource* could in fact be considered any serializable input to a
 function. This is why I'm equiparating this concept with memoization.
 If you don't know what memoziation is, take a look at 
