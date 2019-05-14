@@ -79,4 +79,6 @@ If you need to make serious use of it, read the code and try to understand where
 it might be improved for your specific use-case. A trivial example is the fact that
 I'm using Redis Strings to cache results, while you might want a more appropriate data
 structure, like a Hash, Set, Sorted Set, Geospatial Index, or even a probabilistic
-data structure such as HyperLogLog. Checkout https://redis.io for all your options.
+data structure such as HyperLogLog. 
+
+Checkout https://redis.io to see all the options.
