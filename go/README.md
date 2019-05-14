@@ -34,9 +34,8 @@ func main () {
     // all accomunated by the same tag name, which will be then used as
     // a key prefix in Redis.
     queryResourceTag := "query-set"
-
-    // This instance has a 5 second default lock timeout:
     queryMemoLock, _ := memolock.NewRedisMemoLock(r, queryResourceTag, 5 * time.Second)
+    // This instance has a 5 second default lock timeout:
     // Later in the code you can use the memolock to cache the result of a function and
     // make sure that multiple requests don't cause a stampede.
 
@@ -62,13 +61,16 @@ func main () {
     fmt.Println(cachedQueryset)
     fmt.Println("Launch the script again, see what changes.")
 }
+
 // MemoLock instances are thread-safe.
 
-// The library also supports: 
-// - renewing the lock lease
-// - using the anonymous function to launch an external program that will notify completion through Redis
-// Read example/example.go for more details.
 ```
+# Features
+This library also supports:
+- renewing the lock lease (`GetResourceRenewable()`)
+- triggering an external application that will report the result via Reids (`GetResourceExternal()`)
+
+Read `example/example.go` for more details.
 
 
 # Is this library production-ready?
