@@ -1,8 +1,8 @@
 # redis-memolock
-MemoLock: distributed memoization
+MemoLock: distributed memoization with promises
 
 # What is a MemoLock?
-I chose the name so don't think this is something you should know already.
+I chose the name so don't think this is something you should already know.
 That said, the name is fairly self-explanatory:
 
 A MemoLock is a form of distributed caching with promises. It's like memoization, but 
@@ -33,9 +33,11 @@ to be good enough to work in production (i.e. no concurrency bugs), the main goa
 code that is clear and terse, so that anybody that has real needs can make the right adjustments
 for their own use-case.
 
+Each implementation has its own README with code examples.
+
 ## Go
 Inside the `go/` directory you can find a Go module. This implementation makes good use of 
 goroutines and channels, and uses a single goroutine to write to the subscription multiplexer,
 as opposed to the C# version (not yet available, I will post it in concomitance with 
     [my talk at NDC](https://ndcoslo.com/talk/solving-tricky-coordination-problems-in-stateless-net-services/)
-) which has concurrent writers acquire control of a `System.Collections.Concurrent.ConcurrentDictionary`.
+) which has concurrent writers acquire control of a C# `ConcurrentDictionary`.
