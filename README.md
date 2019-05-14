@@ -59,8 +59,10 @@ I'm writing this warning because distributed locking is a complex subject and it
 tools if you expect from them greater guarantees than they actually provide. As stated previously,
 this library tries to be lightweight to enhance performance, not guarantee full mutual exclusion.
 While not providing such functionality can be seen as a limitation, the upside is that such library
-would not not scale as much (because of a higher level of coordination) and would not allow you
+would not be able scale as much (because of a higher level of coordination) and would not allow you
 to use services that are not Redis-aware to store results, such as a CDN, for example.
+
+*Enjoy the simplicity that springs from limiting the scope of our design.*
 
 # Repository Contents
 This repository will soon contain a few different implementations that are able to cooperate
