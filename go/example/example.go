@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 	"github.com/go-redis/redis"
-	"github.com/kristoff_it/redis-memolock/go/memolock"
+	"github.com/kristoff-it/redis-memolock/go/memolock"
 	"github.com/gorilla/mux"
 	"os/exec"
 )

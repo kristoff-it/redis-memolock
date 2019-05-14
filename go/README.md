@@ -2,7 +2,7 @@
 This is a Go implementation of MemoLock. 
 
 # Installation (skip if using go modules)
-`go get -u github.com/kristoff_it/redis-memolock/go/memolock`
+`go get -u github.com/kristoff-it/redis-memolock/go/memolock`
 
 # Launching the example
 `go run example/example.go` will launch a HTTP server (default addr: `127.0.0.1:8080`).
@@ -10,7 +10,7 @@ Use `curl -get localhost:8080/...` to interact with it. The code is fairly self-
 
 # Usage
 ```go
-import "github.com/kristoff_it/redis-memolock/go/memolock"
+import "github.com/kristoff-it/redis-memolock/go/memolock"
 
 // A memolock instance handles multiple resources of the same type,
 // all accomunated by the same tag name, which will be then used as
