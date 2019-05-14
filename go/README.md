@@ -59,7 +59,7 @@ func main () {
     )
 
     fmt.Println(cachedQueryset)
-    fmt.Println("Launch the script again, see what changes.")
+    fmt.Println("Launch the script multiple, see what changes. Use redis-cli to see what happens in Redis.")
 }
 
 // MemoLock instances are thread-safe.
