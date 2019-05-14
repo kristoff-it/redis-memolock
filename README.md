@@ -56,6 +56,13 @@ writers. If your mistake is bad enough, you might end up in a situation where bo
 and the result becomes corrupted. Don't use this lock to do distributed transactions, for example.
 *Fix: just dont.*
 
+I'm writing this warning because distributed locking is a complex subject and it's easy to misuse
+tools if you expect from them greater guarantees than they actually provide. As stated already,
+this library tries to be lightweight to enhance performance, not guarantee full mutual exclusion.
+While not providing such functionality can be seen as a limitation, the upside is that such library
+would not not scale as much (because of a higher level of coordination) and would not allow you
+to use services that are not Redis-aware to store results, such as a CDN, for example.
+
 # Repository Contents
 This repository will soon contain a few different implementations that are able to cooperate
 (i.e. can generate and resolve promises one from another). While I aim for all implementations
