@@ -30,8 +30,8 @@ promises across the network.
 This repository will soon contain a few different implementations that are able to cooperate
 (i.e. can generate and resolve promises one from another). While I aim for all implementations
 to be good enough to work in production (i.e. no concurrency bugs), the main goal is to write
-code that is clear and terse, so that anybody that is sufficiently motivated can make the right 
-adjustments for their own use-case.
+code that is clear and terse, so that anybody sufficiently motivated can make the right 
+adjustments for their own use-cases.
 
 Each implementation has its own README with code examples.
 
