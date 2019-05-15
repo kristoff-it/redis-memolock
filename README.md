@@ -39,8 +39,10 @@ library up to any scale.
 3. If we are able to acquire the lock, it means that it's our job to generate the value (e.g. fetch it from DB). Once we're done, we save it to Redis and send a message on a Pub/Sub channel called `likes/notif:user-kristoff` to notify all other potentially awaiting clients that the value is now available.
 4. If we were **not** able to acquire the lock, we just subscribe to `likes/notif:user-kristoff` and wait for the service that succeeded in locking the resource to notify us that the value is now available *(as described in the previous step)*.
 
-This is a high level description of what redis-memolock does for you.\
-In practice, to get the concurrency right, there are a few more branches to handle time outs, for example.
+This is a high level description of what redis-memolock does for you.
+
+In practice, to get the concurrency right, there are a few more branches involved, but it has no impact
+on the public interface, so you only have to care about generating the content and handling time-outs.
 
 # !! WARNING !!
 This library is all about nimble locking for enhancing performance. It's ok to use it in combination
