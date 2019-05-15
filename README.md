@@ -37,7 +37,11 @@ library up to any scale.
 1. When a client needs to fetch `likes` for `user-kristoff` (i.e. `likes:user-kristoff`), we look for it in Redis. If it's there, we're done.
 2. If the key is not present, we try to acquire `likes/lock:user-kristoff` using SET with NX. The NX option will ensure that in case of concurrent requests, only one will be able to set the key succesfully.
 3. If we are able to acquire the lock, it means that it's our job to generate the value (e.g. fetch it from DB). Once we're done, we save it to Redis and send a message on a Pub/Sub channel called `likes/notif:user-kristoff` to notify all other potentially awaiting clients that the value is now available.
-4. If we were not able to acquire the lock, we just subscribe to `likes/notif:user-kristoff` and wait for the service that succeeded in locking the resource to notify us that the value is now available (as described in the previous step).
+4. If we were **not** able to acquire the lock, we just subscribe to `likes/notif:user-kristoff` and wait for the service that succeeded in locking the resource to notify us that the value is now available *(as described in the previous step)*.
+
+This is how redis-memolock operates under the covers.\
+In practice, to get the concurrency right, there are a few more branches to handle time outs, for example.
+If you use one of the implementations in this repository you won't have to deal with the details.
 
 # !! WARNING !!
 This library is all about nimble locking for enhancing performance. It's ok to use it in combination
