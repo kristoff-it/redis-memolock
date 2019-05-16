@@ -34,14 +34,14 @@ promises across the network. Since Redis can be replicated and clustered, you ca
 library up to any scale.
 
 # How does it work?
-1. When a client needs to fetch `likes` for `user-kristoff` (i.e. `likes:user-kristoff`), we look for it in Redis.
+1. As a service instance, when we need to fetch `likes` for `kristoff` (i.e. `likes:kristoff`), we look for it in Redis.
     If it's there, we're done.
-2. If the key is not present, we try to acquire `likes/lock:user-kristoff` using SET with NX.
+2. If the key is not present, we try to acquire `likes/lock:kristoff` using SET with NX.
     The NX option will ensure that in case of concurrent requests, only one will be able to set the key succesfully.
 3. If we are able to acquire the lock, it means that it's our job to generate the value (e.g. fetch it from DB).
-    Once we're done, we save it to Redis and send a message on a Pub/Sub channel called `likes/notif:user-kristoff` 
+    Once we're done, we save it to Redis and send a message on a Pub/Sub channel called `likes/notif:kristoff` 
     to notify all other potentially awaiting clients that the value is now available.
-4. If we were **not** able to acquire the lock, we just subscribe to `likes/notif:user-kristoff`.
+4. If we were **not** able to acquire the lock, we just subscribe to `likes/notif:kristoff`.
     The service that succeeded in locking the resource to notify us that the value is now available 
     *(as described in the previous step)*.
 
@@ -105,10 +105,10 @@ Here the term *promise* is used in a fairly abstract way with only a small conne
 Different implementations can interoperate because they share a Redis client and the understanding of three concepts:
 
 1. Keys are stored using the scheme `<resource tag>:<resource id>`\
-   (e.g. `user-recommendations:kristoff`)
+   (e.g. `likes:kristoff`)
 2. Locks are stored using the scheme`<resource tag>/lock:<resource id>`\
-   (e.g. `user-recommendations/lock:kristoff`)
+   (e.g. `likes/lock:kristoff`)
 3. Pub/Sub notifications are sent over the channel `<resource tag>/notif:<resource id>`\
-   (e.g. `user-recommendations/notif:kristoff`)
+   (e.g. `likes/notif:kristoff`)
 
 Any client that can `SET` and `GET` a key, and that can use Pub/Sub, can interoperate transparently with all others.
