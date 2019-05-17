@@ -4,6 +4,9 @@ This is a Go implementation of MemoLock.
 # Installation (skip if using Go modules)
 `go get -u github.com/kristoff-it/redis-memolock/go/memolock`
 
+# Documentation
+Available at [the usual place](https://godoc.org/github.com/kristoff-it/redis-memolock/go/memolock).
+
 # Launching the example
 `go run example/example.go` will launch a HTTP server (default addr: `127.0.0.1:8080`).
 
@@ -59,12 +62,17 @@ func main () {
     )
 
     fmt.Println(cachedQueryset)
-    fmt.Println("Launch the script multiple times, see what changes. Use redis-cli to see what happens in Redis.")
+    // Launch the script multiple times, see what changes. Use redis-cli to see what happens in Redis.
 }
 
 // MemoLock instances are thread-safe.
 
 ```
+If you run this program twice within 5 seconds, you will see that "Cache miss!" is 
+going to show only once, regardless of whether the first execution has already concluded 
+(i.e. the value was cached) or if it's still computing (sleeping instead of doing useful 
+work, in the case of this sample code).
+
 # Features
 This library also supports:
 - renewing the lock lease (`GetResourceRenewable()`)
@@ -74,12 +82,12 @@ Read `example/example.go` for more details.
 
 
 # Is this library production-ready?
-It works well enough, so feel free to import this Go module in your code, 
+Yes, feel free to import this Go module in your code, 
 but know that it was created to showcase the possibilities of using Redis Pub/Sub
 in a caching scenario. Your needs might be different enough to warrant different
 tradeoffs compared to what I chose for this implementation.
 
-Go and Redis make the details of this library extraordinarily clear (and concise).
+Go and Redis make the details of this library extraordinarily clear (and concise, 270LOC).
 If you need to make serious use of it, read the code and try to understand where
 it might be improved for your specific use-case. A trivial example is the fact that
 I'm using Redis Strings to cache results, while you might want a more appropriate data
