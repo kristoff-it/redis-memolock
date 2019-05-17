@@ -37,8 +37,9 @@ func main () {
     // all united by the same tag name, which will be then used as a key
     // prefix in Redis.
     queryResourceTag := "likes"
+
     queryMemoLock, _ := memolock.NewRedisMemoLock(r, queryResourceTag, 5 * time.Second)
-    // This instance has a 5 second default lock timeout:
+    // This instance has a 5 second default lock timeout.
     // Later in the code you can use the memolock to cache the result of a function and
     // make sure that multiple requests don't cause a stampede.
 
