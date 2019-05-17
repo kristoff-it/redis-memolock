@@ -50,6 +50,26 @@ This is a high level description of what redis-memolock does for you.
 In practice, to get the concurrency right, there are a few more branches involved, but it has no impact
 on the public interface, so you only have to care about generating the content and handling time-outs.
 
+# Repository Contents
+This repository will soon contain a few different implementations that are able to cooperate
+(i.e. can generate and resolve promises one from another). While I aim for all implementations
+to be good enough to work in production (i.e. no concurrency bugs), the main goal is to write
+code that is clear and terse, so that anybody sufficiently motivated can make the right 
+adjustments for their own use-cases.
+
+Each implementation has its own README with code examples.
+
+### C#
+Coming in concomitance with [my talk at NDC](https://ndcoslo.com/talk/solving-tricky-coordination-problems-in-stateless-net-services/).
+
+### Go
+[See `go/README.md`](go/).
+
+Inside the `go/` directory you can find a Go module. This implementation makes good use of 
+goroutines and channels, and uses a single goroutine to write to the subscription multiplexer,
+as opposed to the C# version which has concurrent writers acquire control of a `ConcurrentDictionary`.
+
+
 ## !! WARNING !!
 This library is all about nimble locking for enhancing performance. It's ok to use it in combination
 with external systems (e.g. store the result of the computation elsewhere, like a CDN if it's a PDF
@@ -80,25 +100,6 @@ would not be able scale as much (because of a higher level of coordination) and 
 to use services that are not Redis-aware to store results, such as a CDN, for example.
 
 *Enjoy the simplicity and flexibility that springs from limiting the scope of our design.*
-
-# Repository Contents
-This repository will soon contain a few different implementations that are able to cooperate
-(i.e. can generate and resolve promises one from another). While I aim for all implementations
-to be good enough to work in production (i.e. no concurrency bugs), the main goal is to write
-code that is clear and terse, so that anybody sufficiently motivated can make the right 
-adjustments for their own use-cases.
-
-Each implementation has its own README with code examples.
-
-### C#
-Coming in concomitance with [my talk at NDC](https://ndcoslo.com/talk/solving-tricky-coordination-problems-in-stateless-net-services/).
-
-### Go
-[See `go/README.md`](go/).
-
-Inside the `go/` directory you can find a Go module. This implementation makes good use of 
-goroutines and channels, and uses a single goroutine to write to the subscription multiplexer,
-as opposed to the C# version which has concurrent writers acquire control of a `ConcurrentDictionary`.
 
 ## How can different implementations share promises?
 Here the term *promise* is used in a fairly abstract way with only a small connection to any specific language implementation.

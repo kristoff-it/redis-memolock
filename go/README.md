@@ -96,4 +96,4 @@ I'm using Redis Strings to cache results, while you might want a more appropriat
 structure, like a Hash, Set, Sorted Set, Geospatial Index, or even a probabilistic
 data structure such as HyperLogLog. 
 
-Checkout https://redis.io to see all the options.
+Checkout https://redis.io to see all the supported data types.
