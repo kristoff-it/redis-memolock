@@ -76,8 +76,8 @@ work, in the case of this sample code).
 
 # Features
 This library also supports:
-- renewing the lock lease (`GetResourceRenewable()`)
-- triggering an external application that will report the result via Reids (`GetResourceExternal()`)
+- Renewing the lock lease: `GetResourceRenewable()`
+- Triggering an external application that will report the result via Reids: `GetResourceExternal()`
 
 Read `example/extended_example.go` for more details.
 
