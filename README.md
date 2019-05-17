@@ -33,6 +33,17 @@ The implementations in this repository use Redis to cache values and Pub/Sub to 
 promises across the network. Since Redis can be replicated and clustered, you can take this 
 library up to any scale.
 
+## Features 
+- It works across different languages (polyglot). A client only needs a Redis client library and 
+  knowledge of the key naming scheme in use, and is able to generate/resolve promises with any other.
+
+- No polling or other wasteful patterns, and it can scale efficiently in a clustered deployment. 
+  This is something that Redis is in a unique position to provide.
+  
+- It tries to ensure that useless work doesn't happen but, being part of a distributed system, 
+  there is no strong guarantee, as it would necessarily require much more coordination and, consequently, 
+  lead to lower scalability. It tries to get a good tradeoff in that regard.
+
 ## How does it work?
 1. As a service instance, when we need to fetch `likes` for `kristoff` (i.e. `likes:kristoff`), we look for it in Redis.
     If it's there, we're done.
