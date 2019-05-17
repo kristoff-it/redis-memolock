@@ -62,7 +62,8 @@ func main () {
     )
 
     fmt.Println(cachedQueryset)
-    // Launch the script multiple times, see what changes. Use redis-cli to see what happens in Redis.
+    // Launch the script multiple times, see what changes. 
+    // Use redis-cli to see what happens in Redis.
 }
 
 // MemoLock instances are thread-safe.
@@ -78,7 +79,7 @@ This library also supports:
 - renewing the lock lease (`GetResourceRenewable()`)
 - triggering an external application that will report the result via Reids (`GetResourceExternal()`)
 
-Read `example/example.go` for more details.
+Read `example/extended_example.go` for more details.
 
 
 # Is this library production-ready?

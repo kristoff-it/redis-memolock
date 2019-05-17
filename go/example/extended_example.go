@@ -10,7 +10,7 @@ import (
 	"os/exec"
 )
 
-// Address for the HTTP Server to bind to.
+// BindAddr contains the address for the HTTP Server to bind to.
 const BindAddr = "127.0.0.1:8080"
 
 func main() {
