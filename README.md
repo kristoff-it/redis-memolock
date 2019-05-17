@@ -3,10 +3,11 @@ Redis MemoLock - Distributed Caching with Promises
 
 ## What is a MemoLock?
 
-**A MemoLock is a form of distributed caching with promises. It's like memoization, but 
-since the cache is shared by multiple consumers, each key has a locking mechanism that
-ensures that multiple concurrent requests for the same resource don't cause unnecessary
-work.**
+**A MemoLock is a form of distributed caching with promises. It's like 
+    [memoization](https://en.wikipedia.org/wiki/Memoization), 
+but since the cache is shared by multiple consumers, each key has a locking 
+mechanism that ensures that multiple concurrent requests for the same resource 
+don't cause unnecessary work.**
 
 While I claim to have come up with the name, the concept is not new (as always), 
     [here](https://instagram-engineering.com/thundering-herds-promises-82191c8af57d) 
