@@ -1,20 +1,20 @@
 # redis-memolock
 This is a Go implementation of MemoLock. 
 
-# Installation (skip if using Go modules)
+## Installation (skip if using Go modules)
 `go get -u github.com/kristoff-it/redis-memolock/go/memolock`
 
-# Documentation
+## Documentation
 Available at [the usual place](https://godoc.org/github.com/kristoff-it/redis-memolock/go/memolock).
 
-# Launching the example
+## Launching the example
 `go run example/example.go` will launch a HTTP server (default addr: `127.0.0.1:8080`).
 
 Use `curl -get localhost:8080/...` to interact with it. 
 
 The code is fairly self-explanatory.
 
-# Usage
+## Usage
 ```go
 package main
 
@@ -75,7 +75,7 @@ going to show only once, regardless of whether the first execution has already c
 (i.e. the value was cached) or if it's still computing (sleeping instead of doing useful 
 work, in the case of this sample code).
 
-# Features
+## Features
 This library also supports:
 - Renewing the lock lease: `GetResourceRenewable()`
 - Triggering an external application that will report the result via Reids: `GetResourceExternal()`
@@ -83,7 +83,7 @@ This library also supports:
 Read `example/extended_example.go` for more details.
 
 
-# Is this library production-ready?
+## Is this library production-ready?
 Yes, feel free to import this Go module in your code, 
 but know that it was created to showcase the possibilities of using Redis Pub/Sub
 in a caching scenario. Your needs might be different enough to warrant different

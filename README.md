@@ -1,7 +1,7 @@
 # redis-memolock
  MemoLock - Distributed Memoization with Promises 
 
-# What is a MemoLock?
+## What is a MemoLock?
 I chose the name so don't think this is something you should already know.
 That said, the name is fairly self-explanatory:
 
@@ -33,7 +33,7 @@ The implementations in this repository use Redis to cache values and Pub/Sub to 
 promises across the network. Since Redis can be replicated and clustered, you can take this 
 library up to any scale.
 
-# How does it work?
+## How does it work?
 1. As a service instance, when we need to fetch `likes` for `kristoff` (i.e. `likes:kristoff`), we look for it in Redis.
     If it's there, we're done.
 2. If the key is not present, we try to acquire `likes/lock:kristoff` using SET with NX.
@@ -50,7 +50,7 @@ This is a high level description of what redis-memolock does for you.
 In practice, to get the concurrency right, there are a few more branches involved, but it has no impact
 on the public interface, so you only have to care about generating the content and handling time-outs.
 
-# !! WARNING !!
+## !! WARNING !!
 This library is all about nimble locking for enhancing performance. It's ok to use it in combination
 with external systems (e.g. store the result of the computation elsewhere, like a CDN if it's a PDF
 report, and just save in Redis a token representing the location) but it's **NOT** ok to use it to 
@@ -90,17 +90,17 @@ adjustments for their own use-cases.
 
 Each implementation has its own README with code examples.
 
-## C#
+### C#
 Coming in concomitance with [my talk at NDC](https://ndcoslo.com/talk/solving-tricky-coordination-problems-in-stateless-net-services/).
 
-## Go
+### Go
 [See `go/README.md`](go/).
 
 Inside the `go/` directory you can find a Go module. This implementation makes good use of 
 goroutines and channels, and uses a single goroutine to write to the subscription multiplexer,
 as opposed to the C# version which has concurrent writers acquire control of a `ConcurrentDictionary`.
 
-# How can different implementations share promises?
+## How can different implementations share promises?
 Here the term *promise* is used in a fairly abstract way with only a small connection to any specific language implementation.
 Different implementations can interoperate because they share a Redis client and the understanding of three concepts:
 
