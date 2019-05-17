@@ -1,4 +1,4 @@
-# redis-memolock
+# Redis MemoLock
 This is a Go implementation of MemoLock. 
 
 ## Installation (skip if using Go modules)
