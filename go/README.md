@@ -8,7 +8,7 @@ This is a Go implementation of MemoLock.
 Available at [the usual place](https://godoc.org/github.com/kristoff-it/redis-memolock/go/memolock).
 
 ## Launching the example
-`go run example/example.go` will launch a HTTP server (default addr: `127.0.0.1:8080`).
+`go run example/extented_example.go` will launch a HTTP server (default addr: `127.0.0.1:8080`).
 
 Use `curl -get localhost:8080/...` to interact with it. 
 

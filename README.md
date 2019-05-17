@@ -47,7 +47,7 @@ This is something that Redis is in a unique position to provide.
 It tries to ensure that useless work doesn't happen but, being part of a distributed system, 
 there is no strong guarantee, as it would necessarily require much more coordination and, consequently, 
 lead to lower scalability.\
-It tries to get a good tradeoff in that regard.
+It tries to get a good tradeoff in that regard. *Read more in later sections.*
 
 ## How does it work?
 1. As a service instance, when we need to fetch `likes` for `kristoff` (i.e. `likes:kristoff`), we look for it in Redis.
