@@ -1,5 +1,5 @@
 # Redis MemoLock
-Redis MemoLock - Distributed Memoization with Promises 
+MemoLock - Distributed Caching with Promises 
 
 ## What is a MemoLock?
 I chose the name so don't think this is something you should already know.
