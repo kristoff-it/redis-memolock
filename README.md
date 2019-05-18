@@ -15,19 +15,6 @@ you can read about Instagram having a similar concept in their architecture (but
     [a talk to NDC on the same subject](https://ndcoslo.com/talk/solving-tricky-coordination-problems-in-stateless-net-services/) 
 before their post, so I claim it was an indepentent discovery, ha!).
 
-What I just called a *resource* could in fact be considered any serializable input to a
-function. This is why I'm equiparating this concept with memoization.
-If you don't know what memoziation is, take a look at 
-    [the relative wiki article](https://en.wikipedia.org/wiki/Memoization) 
-and 
-    [the Python standard library's implementation](https://docs.python.org/3/library/functools.html#functools.lru_cache).
-
-The second part of the idea is about notifying immediately (i.e. without polling)
-any other request that is waiting for the value to be available in the cache.
-
-**This means that you can use a MemoLock to handle caching of queries, production of pdf reports,
-and really any kind of expensive-but-online computation.**
-
 The implementations in this repository use Redis to cache values and Pub/Sub to resolve
 promises across the network. Since Redis can be replicated and clustered, you can take this 
 library up to any scale.
