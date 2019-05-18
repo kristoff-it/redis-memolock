@@ -29,10 +29,10 @@ knowledge of the key naming scheme in use, and is able to generate/resolve promi
 No polling or other wasteful patterns, and it can scale efficiently in a clustered deployment.\
 This is something that Redis is in a unique position to provide.
 
-### Flexible, Without Foot Guns
+### Flexible
 It tries to ensure that useless work doesn't happen but, being part of a distributed system, 
 there is no strong guarantee, as it would necessarily require much more coordination and, consequently, 
-lead to lower scalability.\
+lead to lower scalability and lower ease of use.\
 It tries to get a good tradeoff in that regard. *Read more in later sections.*
 
 ## How does it work?
