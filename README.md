@@ -15,7 +15,7 @@ you can read about Instagram having a similar concept in their architecture (but
     [a talk to NDC on the same subject](https://ndcoslo.com/talk/solving-tricky-coordination-problems-in-stateless-net-services/) 
 before their post, so I claim it was an indepentent discovery, ha!).
 
-The implementations in this repository use Redis to cache values and Pub/Sub to resolve
+The implementations in this repository use Redis to cache values and Redis Pub/Sub to resolve
 promises across the network. Since Redis can be replicated and clustered, you can take this 
 library up to any scale.
 
