@@ -44,7 +44,7 @@ It tries to get a good tradeoff in that regard. *Read more in later sections.*
     Once we're done, we save it to Redis and send a message on a Pub/Sub channel called `likes/notif:kristoff` 
     to notify all other potentially awaiting clients that the value is now available.
 4. If we were **not** able to acquire the lock, we just subscribe to `likes/notif:kristoff`.
-    The service that succeeded in locking the resource to notify us that the value is now available 
+    The service instance that succeeded in locking the resource to notify us that the value is now available 
     *(as described in the previous step)*.
 
 This is a high level description of what redis-memolock does for you.
