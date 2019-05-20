@@ -11,9 +11,8 @@ don't cause unnecessary work.**
 
 While I claim to have come up with the name, the concept is not new (as always), 
     [here](https://instagram-engineering.com/thundering-herds-promises-82191c8af57d) 
-you can read about Instagram having a similar concept in their architecture (but I did submit 
-    [a talk to NDC on the same subject](https://ndcoslo.com/talk/solving-tricky-coordination-problems-in-stateless-net-services/) 
-before their post, so I claim it was an indepentent discovery, ha!).
+you can read about Instagram having a similar concept in their architecture, and before them
+many others have approached the subject via r/w-through caches and other methods.
 
 The implementations in this repository use Redis to cache values and Redis Pub/Sub to resolve
 promises across the network. Since Redis can be replicated and clustered, you can take this 
