@@ -70,7 +70,7 @@ func main () {
 // MemoLock instances are thread-safe.
 
 ```
-If you run this program twice within 5 seconds, you will see that "Cache miss!" is 
+If you launch two instances of this program within 5 seconds, you will see that "Cache miss!" is 
 going to show only once, regardless of whether the first execution has already concluded 
 (i.e. the value was cached) or if it's still computing (sleeping instead of doing useful 
 work, in the case of this sample code).

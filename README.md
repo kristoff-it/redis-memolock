@@ -1,35 +1,20 @@
 # Redis MemoLock
-MemoLock - Distributed Caching with Promises 
+Redis MemoLock - Distributed Caching with Promises 
 
 ## What is a MemoLock?
-I chose the name so don't think this is something you should already know.
-That said, the name is fairly self-explanatory:
 
-**A MemoLock is a form of distributed caching with promises. It's like memoization, but 
-since the cache is shared by multiple consumers, each key has a locking mechanism that
-ensures that multiple concurrent requests for the same resource don't cause unnecessary
-work.**
+**A MemoLock is a form of distributed caching with promises. It's like 
+    [memoization](https://en.wikipedia.org/wiki/Memoization), 
+but since the cache is shared by multiple consumers, each key has a locking 
+mechanism that ensures that multiple concurrent requests for the same resource 
+don't cause unnecessary work.**
 
 While I claim to have come up with the name, the concept is not new (as always), 
     [here](https://instagram-engineering.com/thundering-herds-promises-82191c8af57d) 
-you can read about Instagram having a similar concept in their architecture (but I did submit 
-    [a talk to NDC on the same subject](https://ndcoslo.com/talk/solving-tricky-coordination-problems-in-stateless-net-services/) 
-before their post, so I claim it was an indepentent discovery, ha!).
+you can read about Instagram having a similar concept in their architecture, and before them
+many others have approached the subject via r/w-through caches and other methods.
 
-What I just called a *resource* could in fact be considered any serializable input to a
-function. This is why I'm equiparating this concept with memoization.
-If you don't know what memoziation is, take a look at 
-    [the relative wiki article](https://en.wikipedia.org/wiki/Memoization) 
-and 
-    [the Python standard library's implementation](https://docs.python.org/3/library/functools.html#functools.lru_cache).
-
-The second part of the idea is about notifying immediately (i.e. without polling)
-any other request that is waiting for the value to be available in the cache.
-
-**This means that you can use a MemoLock to handle caching of queries, production of pdf reports,
-and really any kind of expensive-but-online computation.**
-
-The implementations in this repository use Redis to cache values and Pub/Sub to resolve
+The implementations in this repository use Redis to cache values and Redis Pub/Sub to resolve
 promises across the network. Since Redis can be replicated and clustered, you can take this 
 library up to any scale.
 
@@ -43,10 +28,10 @@ knowledge of the key naming scheme in use, and is able to generate/resolve promi
 No polling or other wasteful patterns, and it can scale efficiently in a clustered deployment.\
 This is something that Redis is in a unique position to provide.
 
-### Flexible, Without Foot Guns
+### Flexible
 It tries to ensure that useless work doesn't happen but, being part of a distributed system, 
 there is no strong guarantee, as it would necessarily require much more coordination and, consequently, 
-lead to lower scalability.\
+lead to lower scalability and lower ease of use.\
 It tries to get a good tradeoff in that regard. *Read more in later sections.*
 
 ## How does it work?
@@ -58,7 +43,7 @@ It tries to get a good tradeoff in that regard. *Read more in later sections.*
     Once we're done, we save it to Redis and send a message on a Pub/Sub channel called `likes/notif:kristoff` 
     to notify all other potentially awaiting clients that the value is now available.
 4. If we were **not** able to acquire the lock, we just subscribe to `likes/notif:kristoff`.
-    The service that succeeded in locking the resource to notify us that the value is now available 
+    The service instance that succeeded in locking the resource to notify us that the value is now available 
     *(as described in the previous step)*.
 
 This is a high level description of what redis-memolock does for you.
