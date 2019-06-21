@@ -33,7 +33,6 @@ namespace redis_memolock
                 builder.AddFilter("System", LogLevel.Error);
                 builder.AddFilter("Engine", LogLevel.Error);
             });
-            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,7 +49,6 @@ namespace redis_memolock
             }
 
             app.UseHttpsRedirection();
-            app.UseSession();
             app.UseMvc();
         }
     }

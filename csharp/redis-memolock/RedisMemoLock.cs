@@ -41,7 +41,8 @@ namespace redis_memolock
             }   
 
             var sub = redis.GetSubscriber();
-            sub.Subscribe($"{_resourceTag}/notif:*", handleNotification);
+            var channel = new RedisChannel($"{_resourceTag}/notif:*", RedisChannel.PatternMode.Pattern);
+            sub.Subscribe(channel, handleNotification);
         }
 
         private void handleNotification(RedisChannel channel, RedisValue message)

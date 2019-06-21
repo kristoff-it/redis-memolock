@@ -120,7 +120,7 @@ namespace redis_memolock.Controllers
                 await Task.Delay(TimeSpan.FromSeconds(1));
                 Console.WriteLine("");
                 await Task.Delay(TimeSpan.FromSeconds(1));
-                Console.WriteLine("Thanks for listening!\nPlease follow me on Twitter @kristoff_it");
+                Console.WriteLine("Thanks for listening!\nPlease follow me on Twitter @croloris");
             }
 
             return result;
