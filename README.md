@@ -61,7 +61,9 @@ adjustments for their own use-cases.
 Each implementation has its own README with code examples.
 
 ### C#
-Coming in concomitance with [my talk at NDC](https://ndcoslo.com/talk/solving-tricky-coordination-problems-in-stateless-net-services/).
+[See `csharp/redis-memolock`](csharp/redis-memolock).
+
+Inside the `csharp` directory you will find a ASP.NET Core WebApi project containing usage examples and a MemoLock implementation that uses a `System.Concurrent.Dictionary` with `TaskCompletionSource` (manually triggered Tasks) to handle concurrency.
 
 ### Go
 [See `go/README.md`](go/).
