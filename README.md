@@ -1,6 +1,8 @@
 # Redis MemoLock
 Redis MemoLock - Distributed Caching with Promises 
 
+**[Check out my talk at NDC Oslo 2019 where I showcase the C# implementation of redis-memolock!](https://www.youtube.com/watch?v=BO-SKMS-D_g)**
+
 ## What is a MemoLock?
 
 **A MemoLock is a form of distributed caching with promises. It's like 
