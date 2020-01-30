@@ -24,7 +24,8 @@ namespace redis_memolock.Controllers
         public async Task<ActionResult<string>> GetExternal1Async(string word)
         {
             var requestTimeout = TimeSpan.FromSeconds(10);
-            var result = await aiLock.GetExternallyManagedResource(word, requestTimeout, async () => 
+            var result = await aiLock.GetExternallyManagedResource(word, 
+                requestTimeout, async () => 
             {
                 Console.WriteLine($"(ext/stemmer/{word}) Working hard!");
                 await Task.Delay(TimeSpan.FromSeconds(1));
@@ -47,8 +48,9 @@ namespace redis_memolock.Controllers
         public async Task<ActionResult<string>> GetExternal2Async()
         {
             #region JokeCode
-            var number = "1";
-            var computeTask = aiLock.GetExternallyManagedResource(number, TimeSpan.FromSeconds(70), async () => 
+            var resource = "joke";
+            var computeTask = aiLock.GetExternallyManagedResource(resource, 
+                TimeSpan.FromSeconds(70), async () => 
             {
                 // NatureScript (TM) code
                 var natureScript = new string[]
@@ -58,13 +60,16 @@ namespace redis_memolock.Controllers
                     "* THE GREAT .NET CORE RUNTIME *",
                     "",
                     "A TASK IS BESTOWED UPON YOU",
-                    $"DETERMINE IF {number} IS A PRIME NUMBER",
+                    "DETERMINE THE FOLLOWING: ",
                     "",
-                    "EXPECTED ANSWERS ARE",
-                    " - YES",
-                    " - NO", 
+                    "'HOW MUCH WOOD WOULD A WOODCHUCK CHUCK",
+                    "IF A WOODCHUCK COULD CHUCK WOOD?'",
                     "",
-                    "YOU MAY NOW PROCEED\n\n"
+                    "PROVIDE THE CORRECT ANSWER IN GRAMS",
+                    "",
+                    "YOU MAY NOW PROCEED",
+                    "",
+                    "",
                 };
 
                 foreach (var line in natureScript) 
@@ -81,7 +86,7 @@ namespace redis_memolock.Controllers
                 "HUMANS I HOPE YOU ARE WORKING HARD",
                 "THE CLOCK IS TICKING",
                 "HOW LONG CAN IT TAKE",
-                "ONLY A *SINGLE* BIT OF INFORMATION IS REQUESTED",
+                "IS A SIMPLE QUESTION ON AGENT BEHAVIOR",
                 "THERE IS NO MUCH TIME LEFT",
                 "PRETTY PLEASE? :("
             };
@@ -116,11 +121,13 @@ namespace redis_memolock.Controllers
                 await Task.Delay(TimeSpan.FromSeconds(1));
                 Console.WriteLine("FOR I AM THE MIGHTY .NET CORE RUNTIME");
                 await Task.Delay(TimeSpan.FromSeconds(1));
-                Console.WriteLine("AND I DO NOT INTEND TO CHECK");
+                Console.WriteLine("AND I DO NOT INTEND TO CHECK.");
                 await Task.Delay(TimeSpan.FromSeconds(1));
                 Console.WriteLine("");
                 await Task.Delay(TimeSpan.FromSeconds(1));
-                Console.WriteLine("Thanks for listening!\nPlease follow me on Twitter @croloris");
+                Console.WriteLine("");
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                Console.WriteLine("Thanks for listening!\nYou can find me on Twitter @croloris");
             }
 
             return result;

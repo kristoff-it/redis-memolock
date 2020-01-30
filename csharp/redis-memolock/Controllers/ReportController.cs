@@ -23,7 +23,8 @@ namespace redis_memolock.Controllers
         public async Task<ActionResult<string>> GetRenewableAsync(string id)
         {
             var requestTimeout = TimeSpan.FromSeconds(5);
-            var reportPdfLocation = await reportLock.GetResource(id, requestTimeout, async (renew) => 
+            var reportPdfLocation = await reportLock.GetResource(id, 
+                requestTimeout, async (renew) => 
             {
 
                 Console.WriteLine($"(report/renewable/{id}) Working super-hard! (1)");
@@ -47,7 +48,8 @@ namespace redis_memolock.Controllers
         public async Task<ActionResult<string>> GetOhNoAsync(string id)
         {
             var requestTimeout = TimeSpan.FromSeconds(5);
-            var reportPdfLocation = await reportLock.GetResource(id, requestTimeout, async (renew) => 
+            var reportPdfLocation = await reportLock.GetResource(id, requestTimeout, 
+                async (renew) => 
             {
 
                 // Simulate some hard work

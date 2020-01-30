@@ -124,6 +124,7 @@ namespace redis_memolock
                     await Task.WhenAll(
                         // This syntax enables pipelining of commands.
                         db.StringSetAsync($"{_resourceTag}:{id}", resourceValue, resourceTTL),
+                        db.KeyDeleteAsync($"{_resourceTag}/lock:{id}"),
                         db.PublishAsync($"{_resourceTag}/notif:{id}", resourceValue)
                     );
                     return resourceValue;
