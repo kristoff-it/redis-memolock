@@ -2,6 +2,7 @@ package memolock
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -17,6 +18,7 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
+var client *redis.Client
 var redisMemoLock *RedisMemoLock
 
 func TestMain(m *testing.M) {
@@ -49,7 +51,7 @@ func TestMain(m *testing.M) {
 
 	os.Setenv("REDIS_URI", "localhost:"+string(useExternalPort[0]))
 
-	client := redis.NewClient(&redis.Options{
+	client = redis.NewClient(&redis.Options{
 		Addr: "localhost:" + string(useExternalPort[0]),
 	})
 
@@ -256,5 +258,43 @@ func TestRedisMemoLock(t *testing.T) {
 
 		assert.Equal(t, value, result)
 		assert.Equal(t, value, notifiedResult)
+	})
+
+	// This test is attempting to ensure that the lock that is acquired to generate a value that we cache
+	// is relinquished after the generation of that value has taken place. The original code would SETNX a lock
+	// and ultimately wait for it to expire. This created issues when we attempted to invalidate the generated
+	// value. If we have a lockTimeout of say 5 seconds and this happens before 5 seconds occurs we have issues:
+	// `GetResource` -> Delete the cached value -> `GetResource`(again, could be a new request from a totally different service)
+	// In this scenario this happens for the second `GetResource`
+	// - Redis.Get, doesn't find value because it was deleted
+	// - Attempt to acquire lock, fail because the lock is still held by the original `GetResource` because it hasn't expired
+	// - Subscribe to the Redis pub/sub and never receive a value, ultimately timing out and erroring.
+	// This test recreates this scenario and originally failed when written. It passing means that at least in this case the lock
+	// is relinquished once the resource is generated so the second `GetResource` can function properly.
+	t.Run("we should succeed in generating a value on a follow-up Get even if the lockTimeout duration hasn't passed", func(t *testing.T) {
+		resourceId := uuid.NewString()
+		value := uuid.NewString()
+		value2 := uuid.NewString()
+
+		// Initial Get of uncached resource, this will generate the value
+		result, err := redisMemoLock.GetResource(resourceId, 5*time.Second, func() (string, time.Duration, error) {
+			time.Sleep(2 * time.Second)
+
+			return value, 5 * time.Second, nil
+		})
+		assert.Nil(t, err)
+
+		// Delete the value so that we can ensure the lock is relinquished when we perform a follow-up get
+		_, err = client.Del(context.Background(), fmt.Sprintf("test:%s", resourceId)).Result()
+		assert.Nil(t, err)
+
+		// Follow-up Get that should not timeout and instead cache `value2`
+		resultTwo, err := redisMemoLock.GetResource(resourceId, 5*time.Second, func() (string, time.Duration, error) {
+			return value2, 5 * time.Second, nil
+		})
+		assert.Nil(t, err)
+
+		assert.Equal(t, value, result)
+		assert.Equal(t, value2, resultTwo)
 	})
 }

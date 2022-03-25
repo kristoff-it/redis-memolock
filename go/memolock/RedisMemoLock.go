@@ -223,6 +223,33 @@ func (r *RedisMemoLock) getResourceImpl(resID string, generatingFunc FetchFunc, 
 	}
 
 	if resourceLock {
+		// It's possible, though very very unlikely, that we could enter this _after_ a failed Get
+		// and _also after_ the cached value is Set in Redis (see the code below)
+		// We want to avoid generating the value if we can, and so we perform an extra Get
+		// here to check if it has been set in the brief window that exists for it to occur.
+		//
+		// Note on performance: Yes this is an extra call and that's not nothing, but we already
+		//   do two Gets in the case where the lock has already been acquired, so an additional
+		//   one here shouldn't hurt. We hit the other case significantly more often.
+		res, err := r.client.Get(context.Background(), resourceID).Result()
+		if err != redis.Nil { // key is not missing
+			if err != nil { // real error happened?
+				return "", err
+			}
+
+			// The lock we acquired is not valid because we're not generating so we must relinquish it
+			// While doing so we might as well Publish just in case other callers are subscribed now
+			// They would otherwise timeout if we didn't publish.
+			pipe := r.client.Pipeline()
+			pipe.Publish(context.Background(), notifID, res)
+			pipe.Del(context.Background(), lockID) // We need to relinquish the lock after we're done, otherwise it will persist until expiration
+			_, err := pipe.Exec(context.Background())
+			if err != nil {
+				return "", err
+			}
+			return res, nil
+		}
+
 		// We acquired the lock, use the client-provided func to generate the resource.
 		resourceValue, resourceTTL, err := generatingFunc()
 		if err != nil {
@@ -232,9 +259,14 @@ func (r *RedisMemoLock) getResourceImpl(resID string, generatingFunc FetchFunc, 
 		if !externallyManaged {
 			// Storage of the token on Redis and notification is handled
 			// by us and we can return the token immediately.
+			// We need to relinquish the lock after we're done here.
+			// If we don't it will persist until the `lockTimeout` has expired
+			// When we invalidate cache values we can encounter issues with this
+			// because the lock exists but there is nothing generating a value.
 			pipe := r.client.Pipeline()
 			pipe.Set(context.Background(), resourceID, resourceValue, resourceTTL)
 			pipe.Publish(context.Background(), notifID, resourceValue)
+			pipe.Del(context.Background(), lockID) // We need to relinquish the lock after we're done, otherwise it will persist until expiration
 			_, err := pipe.Exec(context.Background())
 			if err != nil {
 				return "", err
