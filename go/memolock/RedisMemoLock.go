@@ -1,10 +1,11 @@
 package memolock
 
 import (
+	"context"
 	"errors"
 	"time"
 
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v8"
 	"github.com/gofrs/uuid"
 )
 
@@ -40,6 +41,12 @@ const renewLockLuaScript = `
     end
 `
 
+// Order is not maintained by this method, but it is fast
+func remove(s []chan string, i int) []chan string {
+	s[i] = s[len(s)-1]
+	return s[:len(s)-1]
+}
+
 type subRequest struct {
 	name    string
 	isUnsub bool
@@ -61,7 +68,7 @@ func (r *RedisMemoLock) dispatch() {
 		select {
 		// We have a new sub/unsub request
 		case sub, ok := <-r.subCh:
-			if !ok {
+			if !ok { // TODO: When could this happen???
 				// We are closing, close all pending channels
 				for _, list := range r.subscriptions {
 					for _, ch := range list {
@@ -76,16 +83,27 @@ func (r *RedisMemoLock) dispatch() {
 				list, _ := r.subscriptions[sub.name]
 				r.subscriptions[sub.name] = append(list, sub.resCh)
 			case true:
-				// TODO: there are better strategies...
-				if list, ok := r.subscriptions[sub.name]; ok {
-					newList := list[:0]
-					for _, x := range list {
-						if sub.resCh != x {
-							newList = append(newList, x)
+
+				// Order of the subscriptions is not maintained by this
+				// that shouldn't matter but noting it here in case it does...
+				list, ok := r.subscriptions[sub.name]
+				index := 0
+				if ok {
+					for i, resultChannel := range list {
+						if sub.resCh == resultChannel {
+							index = i
 						}
 					}
-					for i := len(newList); i < len(list); i++ {
-						newList[i] = nil
+
+					unsubbedList := remove(list, index)
+
+					// If the list of channels is empty we should remove the subscription altogether
+					// it will be recreated if someone else subscribes
+					if len(unsubbedList) == 0 {
+						delete(r.subscriptions, sub.name)
+					} else {
+						// if more channels remain then we just remove the current unsub channel from list
+						r.subscriptions[sub.name] = unsubbedList
 					}
 				}
 			}
@@ -96,7 +114,8 @@ func (r *RedisMemoLock) dispatch() {
 					ch <- msg.Payload
 					close(ch)
 				}
-				r.subscriptions[msg.Channel] = nil
+
+				delete(r.subscriptions, msg.Channel)
 			}
 		}
 	}
@@ -106,8 +125,8 @@ func (r *RedisMemoLock) dispatch() {
 func NewRedisMemoLock(client *redis.Client, resourceTag string, lockTimeout time.Duration) (*RedisMemoLock, error) {
 	pattern := resourceTag + "/notif:*"
 
-	pubsub := client.PSubscribe(pattern)
-	_, err := pubsub.Receive()
+	pubsub := client.PSubscribe(context.Background(), pattern)
+	_, err := pubsub.Receive(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -140,7 +159,7 @@ func (r *RedisMemoLock) GetResource(resID string, timeout time.Duration, generat
 
 func (r *RedisMemoLock) lockRenewFuncGenerator(lockID string, reqUUID string) LockRenewFunc {
 	return func(extension time.Duration) error {
-		cmd := r.client.Eval(renewLockLuaScript, []string{lockID}, reqUUID, int(extension))
+		cmd := r.client.Eval(context.Background(), renewLockLuaScript, []string{lockID}, reqUUID, int(extension))
 		if err := cmd.Err(); err != nil {
 			return err
 		}
@@ -188,7 +207,7 @@ func (r *RedisMemoLock) getResourceImpl(resID string, generatingFunc FetchFunc, 
 	notifID := r.resourceTag + "/notif:" + resID
 
 	// If the resource is available, return it immediately.
-	res, err := r.client.Get(resourceID).Result()
+	res, err := r.client.Get(context.Background(), resourceID).Result()
 	if err != redis.Nil { // key is not missing
 		if err != nil { // real error happened?
 			return "", err
@@ -198,7 +217,7 @@ func (r *RedisMemoLock) getResourceImpl(resID string, generatingFunc FetchFunc, 
 	// key is missing
 
 	// The resource is not available, can we get the lock?
-	resourceLock, err := r.client.SetNX(lockID, reqUUID, r.lockTimeout).Result()
+	resourceLock, err := r.client.SetNX(context.Background(), lockID, reqUUID, r.lockTimeout).Result()
 	if err != nil {
 		return "", err
 	}
@@ -214,9 +233,9 @@ func (r *RedisMemoLock) getResourceImpl(resID string, generatingFunc FetchFunc, 
 			// Storage of the token on Redis and notification is handled
 			// by us and we can return the token immediately.
 			pipe := r.client.Pipeline()
-			pipe.Set(resourceID, resourceValue, resourceTTL)
-			pipe.Publish(notifID, resourceValue)
-			_, err := pipe.Exec()
+			pipe.Set(context.Background(), resourceID, resourceValue, resourceTTL)
+			pipe.Publish(context.Background(), notifID, resourceValue)
+			_, err := pipe.Exec(context.Background())
 			if err != nil {
 				return "", err
 			}
@@ -240,7 +259,7 @@ func (r *RedisMemoLock) getResourceImpl(resID string, generatingFunc FetchFunc, 
 	// Refetch the key in case we missed the pubsub announcement by a hair.
 	// subCh must have no buffering to make sure we do this *after* the sub
 	// really takes effect.
-	res, err = r.client.Get(resourceID).Result()
+	res, err = r.client.Get(context.Background(), resourceID).Result()
 	if err != redis.Nil { // key is not missing
 		if err != nil { // real error happened?
 			r.subCh <- unsubRequest

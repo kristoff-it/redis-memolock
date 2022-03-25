@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-redis/redis"
-	"github.com/gorilla/mux"
-	"github.com/kristoff-it/redis-memolock/go/memolock"
 	"net/http"
 	"os/exec"
 	"time"
+
+	"github.com/go-redis/redis/v8"
+	"github.com/gorilla/mux"
+	"github.com/kristoff-it/redis-memolock/go/memolock"
 )
 
 // BindAddr contains the address for the HTTP Server to bind to.
